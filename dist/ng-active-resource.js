@@ -1426,8 +1426,8 @@ angular.module('ActiveResource').provider('ARBase', function () {
           var url = _this.api.updateURL;
           if (!url)
             return;
-          if (url.match(/\:\w+/))
-            url = url.replace(/\:\w+/, this[primaryKey]);
+          if (url.match(/\:[A-za-z_]+/))
+            url = url.replace(/\:[A-za-z_]+/, this[primaryKey]);
           if (data) {
             return instance.update(data).then(function (response) {
               instance = response;
