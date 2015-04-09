@@ -1127,7 +1127,7 @@ angular.module('ActiveResource').provider('ARParameterize', function () {
         return;
       if (!object)
         return url;
-      return url.replace(/\:\_*[A-Za-z]+/g, function (param) {
+      return url.replace(/\:\_*[A-Za-z_]+/g, function (param) {
         param = param.replace(/\:*/, '');
         return object[param];
       });
@@ -1147,9 +1147,9 @@ angular.module('ActiveResource').provider('URLify', function () {
         var qs = '';
         if (querystring.stringify(terms))
           qs = '?' + querystring.stringify(terms);
-        if (url.match(/\[\:[A-Za-z]+\]/))
-          url = url.replace(/\[\:[A-Za-z]+\]/, qs);
-        else if (url.match(/\:\_*[A-Za-z]+/))
+        if (url.match(/\[\:[A-Za-z_]+\]/))
+          url = url.replace(/\[\:[A-Za-z_]+\]/, qs);
+        else if (url.match(/\:\_*[A-Za-z_]+/))
           url = parameterize(url, terms);
         return url;
       };
@@ -1385,7 +1385,7 @@ angular.module('ActiveResource').provider('ARBase', function () {
             if (put !== false)
               put = true;
           } else if (!url) {
-            url = _this.api.createURL;
+            url = URLify(_this.api.createURL, instance);
           }
           _this.emit('$save:called', instance);
           var json = serializer.serialize(instance);
