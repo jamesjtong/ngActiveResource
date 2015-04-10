@@ -1772,16 +1772,14 @@ angular.module('ActiveResource').provider('ARBase', function () {
         _this.prototype.$delete = function () {
           var instance = this;
           _this.emit('$delete:called', this);
-          var queryterms = {};
           var config = {};
           var url = _this.api.deleteURL;
-          queryterms[primaryKey] = instance[primaryKey];
           // if user has provided an attr in their deleteURL definition
           // then we URLify the deleteURL. Else we pass in params as 
           if (_this.api.deleteURL.indexOf('/:') !== -1) {
-            url = URLify(_this.api.deleteURL, queryterms);
+            url = URLify(_this.api.deleteURL, instance);
           } else {
-            config = { params: queryterms };
+            config = { params: instance };
           }
           return $http.delete(url, config).then(function (response) {
             if (response.status == 200) {
