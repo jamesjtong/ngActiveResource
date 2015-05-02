@@ -1641,7 +1641,7 @@ angular.module('ActiveResource').provider('ARBase', function () {
           setPrimaryKey(instance, data);
           cacheInstance(instance);
           _.each(associations.belongsTo, function (model) {
-            var name = nameOfBelongsToModel(model);
+            var name = propertyNameOfBelongsToModel(model);
             if (data && data[name] !== undefined) {
               instance[name] = data[name];
             }
@@ -1809,23 +1809,19 @@ angular.module('ActiveResource').provider('ARBase', function () {
         // In the event a "Sensor" model belongs to a "System" model, returns true if an instance
         // of sensor contains a property called "system" that is an instance of the System model.
         function instanceIsAssociatedWith(instance, association) {
-          var associationName = nameOfBelongsToModel(association);
+          var associationName = propertyNameOfBelongsToModel(association);
           return !!(instance[associationName] && instance[associationName].constructor == association);
         }
         ;
-        // function nameOfBelongsToModel(model)
+        // function propertyNameOfBelongsToModel(model)
         //
-        // @param {model} - [Constructor] Model to retrieve name from
+        // @param {model} - [Constructor] Model to retrieve property name from
         //
-        // Returns name of model if the model is a constructor. Else returns undefined.
-        function nameOfBelongsToModel(model) {
-          if (!model)
+        // Returns property name of model if defined. Else returns undefined.
+        function propertyNameOfBelongsToModel(model) {
+          if (!model && !model.propertyName)
             return;
-          if (!model.klass && !model.name)
-            return;
-          if (!model.klass)
-            return model.name.camelize();
-          return model.klass.name.camelize();
+          return model.propertyName.camelize();
         }
         ;
         // Model.instance#establishBelongsTo
@@ -1837,7 +1833,7 @@ angular.module('ActiveResource').provider('ARBase', function () {
           if (associations.belongsTo.length) {
             for (var i in associations.belongsTo) {
               var association = associations.belongsTo[i].klass;
-              var associationName = nameOfBelongsToModel(association);
+              var associationName = propertyNameOfBelongsToModel(association);
               if (instanceIsAssociatedWith(this, association)) {
                 var belongs = this[associationName][this.constructor.name.pluralize().camelize()];
                 if (belongs && belongs.push)
